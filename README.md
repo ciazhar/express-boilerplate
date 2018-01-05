@@ -76,3 +76,14 @@ config your package.json, in `start` commad, change `node` with `nodemon` like t
     "start": "nodemon ./bin/www"
 },
 ```
+
+## Using Sequalize
+
+> Sequalize is ORM for Node
+Just install sequalize using this commad
+
+```bash
+npm install sequelize -s
+npm install sequelize-cli -g
+sequelize init
+```
