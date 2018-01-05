@@ -87,3 +87,9 @@ npm install sequelize -s
 npm install sequelize-cli -g
 sequelize init
 ```
+
+### Install dotEnv
+> Dot Env is a file for res
+```
+npm install dotenv -s
+```
