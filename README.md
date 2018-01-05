@@ -89,7 +89,92 @@ sequelize init
 ```
 
 ### Install dotEnv
-> Dot Env is a file for res
-```
+
+> Dot Env is a file for restore variable
+
+```bash
 npm install dotenv -s
+```
+
+config .env
+
+```env
+NODE_ENV = development
+DB_USERNAME = user
+DB_PASSWORD = pass
+DB_DATABASE = express
+DB_HOST = 127.0.0.1
+DB_DIALECT = mysql
+```
+
+change config/config.json to config.js like
+
+```js
+require('dotenv').config()
+
+module.exports =
+{
+  "development": {
+    "username": process.env.DB_USERNAME || '',
+    "password":  process.env.DB_PASSWORD || '',
+    "database":  process.env.DB_DATABASES || '',
+    "host":  process.env.DB_HOST || '',
+    "dialect": process.env.DB_DIALECT || '',
+    "logging":true
+  },
+  "test": {
+    "username": "root",
+    "password": null,
+    "database": "database_test",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "root",
+    "password": null,
+    "database": "database_production",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  }
+}
+```
+
+and config your `models/index.js` like
+
+```js
+var config    = require(__dirname + '/../config/config.js')[env];
+```
+
+### Create script migration Sequilize
+
+```bash
+sequelize model:generate --name User --attributes name:String
+npm install mysql2 -s
+sequelize db:migrate
+```
+
+### Create Controller
+
+```js
+create : function(req,res,next){
+        let result={
+            'success':false,
+            'status':'ERROR',
+            'msg':'SOMETHING WENT WRONG'
+        }
+        res.json(result)
+}
+```
+
+controller
+
+```js
+router.get('/create',userController.create)
+```
+
+app js
+
+```js
+var users = require('./routes/users');
+app.use('/users', users);
 ```
