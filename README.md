@@ -62,14 +62,14 @@ Your application will run in port 3000
 
 ## Install Nodemon
 
-> Nodemon is tool for hot deploy Node application
+> Nodemon is tool for hot deploy Node application.
 Just install nodemon using this command
 
 ```bash
 npm install nodemon -s
 ```
 
-config your package.json, in `start` commad, change `node` with `nodemon` like this :
+Then config your __package.json__ file, in `start` commad, change `node` with `nodemon` like this :
 
 ```json
 "scripts": {
@@ -79,24 +79,32 @@ config your package.json, in `start` commad, change `node` with `nodemon` like t
 
 ## Using Sequalize
 
-> Sequalize is ORM for Node
+> Sequalize is ORM for Node.
 Just install sequalize using this commad
 
 ```bash
 npm install sequelize -s
 npm install sequelize-cli -g
+```
+
+Then you can generate sequalize in your project using this command
+
+```bash
 sequelize init
 ```
 
-### Install dotEnv
+## Install dotEnv
 
-> Dot Env is a file for restore variable
+> Dot Env is a file for restore global variable.
+Just install dotEnv using this commad
 
 ```bash
 npm install dotenv -s
 ```
 
-config .env
+### Config Database in .env
+
+First off all create file named __.env__. Then copy this boilerplate.
 
 ```env
 NODE_ENV = development
@@ -107,7 +115,13 @@ DB_HOST = 127.0.0.1
 DB_DIALECT = mysql
 ```
 
-change config/config.json to config.js like
+Then add dotEnv to __app.js__ using this code :
+
+```js
+require('dotenv').config()
+```
+
+Because json file is not flexible to change variable inside it, then rename `config/config.json` to `config.js` like this :
 
 ```js
 require('dotenv').config()
@@ -139,42 +153,65 @@ module.exports =
 }
 ```
 
-and config your `models/index.js` like
+And config your __models/index.js__ like this :
 
 ```js
 var config    = require(__dirname + '/../config/config.js')[env];
 ```
 
-### Create script migration Sequilize
+## Add MySQL Dependency
+
+Add mysql dependency using this command
 
 ```bash
-sequelize model:generate --name User --attributes name:String
 npm install mysql2 -s
+```
+
+## Create model and migrate it in Sequelize
+
+First create model using this command
+
+```bash
+sequelize model:generate --name User --attributes name:String, password:String
+```
+
+Then migrate it using this command
+
+```bash
 sequelize db:migrate
 ```
 
 ### Create Controller
 
+First define your controller in __controller/UserController.js__. Here i write some code to displaying error message
+
 ```js
-create : function(req,res,next){
+let model =  require('../models')
+
+module.exports={
+    create : function(req,res,next){
         let result={
             'success':false,
             'status':'ERROR',
             'msg':'SOMETHING WENT WRONG'
         }
         res.json(result)
+    }
 }
 ```
 
-controller
+Then route your controller to __router/users.js__
 
 ```js
+let userController = require('../controller/UserController')
 router.get('/create',userController.create)
 ```
 
-app js
+And register your router in __app.js__
 
 ```js
 var users = require('./routes/users');
-app.use('/users', users);
+app.use('/user', users);
 ```
+
+To access this create user you can use __GET__ in `http://localhost:3000/user/create`
